@@ -1,3 +1,4 @@
+import { style } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
@@ -16,20 +17,29 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 })
 export class CadastroClientesComponent {
 
+  //atributo
+  mensagem: string = ''//variavel para exibir a resposta;
+
   //metodo construtor
-  constructor(
-    private httpClient: HttpClient
-  ){}
+  constructor (private httpClient: HttpClient) { }
 
   //Criar objeto para capturar o formulario
   //os campos devem ter os mesmos nomes
 
   formulario = new FormGroup({//conjunto do formulario
-    nome : new FormControl('',[Validators.required]),//campo do formulario
-    cpf : new FormControl('',[Validators.required]),
-    email : new FormControl('',[Validators.required]),
-    telefone : new FormControl('',[Validators.required])
+    nome: new FormControl('', [Validators.required, Validators.minLength(8)]),//campo do formulario
+    cpf: new FormControl('', [Validators.required, Validators.pattern(/^\d{11}$/)]),//expressão regular
+    email: new FormControl('', [Validators.required, Validators.email]),
+    telefone: new FormControl('', [Validators.required, Validators.pattern(/^\d{11}$/)])
   });
+
+  //criando um objeto para exibir na pagina
+  //as menssagens de validação para cada campo dp formulario
+  get f() {
+
+    return this.formulario.controls;
+  }
+
 
   //função executada quando clicar no submit
 
@@ -37,11 +47,16 @@ export class CadastroClientesComponent {
 
     //fazendo uma requisição post
     this.httpClient
-    .post('http://localHost:8081/api/clientes', this.formulario.value, 
-      {responseType: 'text'})
+      .post('http://localHost:8081/api/clientes', this.formulario.value,
+        { responseType: 'text' })
       .subscribe({
         next: (data) => {
-          console.log(data);
+          //capturar o retorno da api
+          this.mensagem = data;
+          if(data.includes('sucesso')){
+          //limpar os campos do formulario
+          this.formulario.reset();
+          }
         }
       });
   }
