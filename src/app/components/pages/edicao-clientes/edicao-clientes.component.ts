@@ -4,6 +4,7 @@ import { routes } from '../../../app.routes';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-edicao-clientes',
@@ -11,7 +12,11 @@ import { ActivatedRoute } from '@angular/router';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxMaskDirective
+  ],
+  providers: [
+    provideNgxMask()
   ],
   templateUrl: './edicao-clientes.component.html',
   styleUrl: './edicao-clientes.component.css'
@@ -21,6 +26,8 @@ export class EdicaoClientesComponent {
   //atributos
   mensagem: string = '';//variavel para exibir a resposta
   id: string = '';//variavel para capturar o id do cliente
+  tipos: string[] = [];//array para armazenar os tipos de clientes
+
 
   //metodo construtor
   constructor (
@@ -39,8 +46,15 @@ export class EdicaoClientesComponent {
       next: (data) => {
         //preencher o formulario com os dados do cliente
         this.formulario.patchValue(data);
+      }  
+    });
+
+    this.httpClient.get('http://localhost:8081/api/tipos')
+    .subscribe({
+      next: (data) => {
+        this.tipos = data as string[];
       }
-    })
+    });
   }
   
    //Criar objeto para capturar o formulario
@@ -50,7 +64,8 @@ export class EdicaoClientesComponent {
     nome: new FormControl('', [Validators.required, Validators.minLength(8)]),//campo do formulario
     cpf: new FormControl('', [Validators.required, Validators.pattern(/^\d{11}$/)]),//expressão regular
     email: new FormControl('', [Validators.required, Validators.email]),
-    telefone: new FormControl('', [Validators.required, Validators.pattern(/^\d{11}$/)])
+    telefone: new FormControl('', [Validators.required, Validators.pattern(/^\d{11}$/)]),
+    tipo: new FormControl('', [Validators.required])
   });
 
   //criando um objeto para exibir na pagina

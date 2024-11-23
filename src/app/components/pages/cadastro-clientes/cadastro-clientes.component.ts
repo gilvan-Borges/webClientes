@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-cadastro-clientes',
@@ -10,7 +11,11 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxMaskDirective
+  ],
+  providers: [
+    provideNgxMask()
   ],
   templateUrl: './cadastro-clientes.component.html',
   styleUrl: './cadastro-clientes.component.css'
@@ -19,6 +24,7 @@ export class CadastroClientesComponent {
 
   //atributo
   mensagem: string = ''//variavel para exibir a resposta;
+  tipos: string[] = [];//array para armazenar os tipos de clientes
 
   //metodo construtor
   constructor (private httpClient: HttpClient) { }
@@ -30,7 +36,8 @@ export class CadastroClientesComponent {
     nome: new FormControl('', [Validators.required, Validators.minLength(8)]),//campo do formulario
     cpf: new FormControl('', [Validators.required, Validators.pattern(/^\d{11}$/)]),//expressão regular
     email: new FormControl('', [Validators.required, Validators.email]),
-    telefone: new FormControl('', [Validators.required, Validators.pattern(/^\d{11}$/)])
+    telefone: new FormControl('', [Validators.required, Validators.pattern(/^\d{11}$/)]),
+    tipo: new FormControl('', [Validators.required])
   });
 
   //criando um objeto para exibir na pagina
@@ -42,7 +49,15 @@ export class CadastroClientesComponent {
 
 
   //função executada quando clicar no submit
-
+  ngOnInit() {
+    this.httpClient.get('http://localhost:8081/api/tipos')
+    .subscribe({
+      next: (data) => {
+        this.tipos = data as string[];
+      }
+    });
+  }
+  
   cadastrarCliente() {
 
     //fazendo uma requisição post
