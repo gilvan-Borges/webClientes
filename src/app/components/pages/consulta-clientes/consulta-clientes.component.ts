@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { environment } from '../../../environments/environments';
 
 @Component({
   selector: 'app-consulta-clientes',
@@ -37,7 +38,7 @@ export class ConsultaClientesComponent {
   ngOnInit(){
 
     //fazendo uma requisição para o serviço de consulta de cliente da API
-    this.httpClient.get('http://localhost:8081/api/clientes')
+    this.httpClient.get(environment.apiClientes + '/clientes')
     .subscribe({//aguardando a API retornar uma resposta
       
       next: (data) => {// capturando os dados da api 

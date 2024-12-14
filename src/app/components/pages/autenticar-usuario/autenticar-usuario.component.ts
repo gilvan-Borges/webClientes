@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../environments/environments';
 
 
 @Component({
@@ -42,7 +43,7 @@ export class AutenticarUsuarioComponent {
 
 
   autenticarUsuario() {
-    this.httpClient.post('http://localhost:8082/api/usuarios/autenticar', this.formulario.value)
+    this.httpClient.post(environment.apiUsuarios + '/usuarios/autenticar', this.formulario.value)
       .subscribe({
         next: (data: any) => {
           //salvar os dados do usuário autenticado em uma session storage

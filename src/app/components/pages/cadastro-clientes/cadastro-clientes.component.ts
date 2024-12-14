@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { environment } from '../../../environments/environments';
 
 @Component({
   selector: 'app-cadastro-clientes',
@@ -50,7 +51,7 @@ export class CadastroClientesComponent {
 
   //função executada quando clicar no submit
   ngOnInit() {
-    this.httpClient.get('http://localhost:8081/api/tipos')
+    this.httpClient.get(environment.apiClientes + '/tipos')
     .subscribe({
       next: (data) => {
         this.tipos = data as string[];

@@ -5,6 +5,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { environment } from '../../../environments/environments';
 
 @Component({
   selector: 'app-edicao-clientes',
@@ -41,7 +42,7 @@ export class EdicaoClientesComponent {
     this.id = this.activatedRoute.snapshot.paramMap.get('id') as string;
 
     //consultar o cliente na API através do ID
-    this.httpClient.get('http://localhost:8081/api/clientes/' + this.id)
+    this.httpClient.get(environment.apiClientes + 'clientes/' + this.id)
     .subscribe({
       next: (data) => {
         //preencher o formulario com os dados do cliente

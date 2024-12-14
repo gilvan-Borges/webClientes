@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../environments/environments';
 
 
 @Component({
@@ -64,7 +65,7 @@ export class CriarUsuarioComponent {
   this.mensagemErro = '';
 
     //faznedo a chamada para a api
-    this.httpClient.post('http://localhost:8082/api/usuarios/criar', this.formulario.value)
+    this.httpClient.post(environment.apiUsuarios + '/criar', this.formulario.value)
       .subscribe({//capturar o retorno da api
         next: (data: any) =>{//capturar sucesso..
           this.mensagemSucesso = data.mensagem;
